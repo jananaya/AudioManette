@@ -12,6 +12,6 @@ namespace AudioManette.AudioSource
         Task<bool> SetVolume(int volumePercent); 
         Task<bool> EnableRepeatMode();
         Task<bool> DisableRepeatMode();
-        Task<Track> GetCurrentTrack();
+        Task<CurrentPlayingState> GetCurrentPlayingState();
     }
 }
