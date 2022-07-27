@@ -8,4 +8,13 @@
     <RunTimeIdentifier>win10-x86</RunTimeIdentifier>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="..\..\config\App.config" Link="App.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AudioManette.AudioSource/AudioManette.AudioSource.csproj" />
+    <ProjectReference Include="../SpotifyAudioSource/SpotifyAudioSource.csproj" />
+  </ItemGroup>
+  
 </Project>
