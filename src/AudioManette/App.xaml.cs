@@ -6,7 +6,6 @@ using System.Collections.Specialized;
 
 using AudioManette.AudioSource;
 using AudioManette.Authorization;
-using AudioManette.Views;
 
 namespace AudioManette
 {
@@ -52,7 +51,7 @@ namespace AudioManette
 
             var spotify = SpotifyAudioSource.CreateAsync(config).GetAwaiter().GetResult();
 
-            var mainWindow = new MainWindow(spotify);
+            var mainWindow = new PlayerWindow(spotify);
 
             mainWindow.Show();
         }
