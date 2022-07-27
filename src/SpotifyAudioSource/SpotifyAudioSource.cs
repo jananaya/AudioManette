@@ -129,14 +129,19 @@ namespace AudioManette.AudioSource
 
             return await _spotify.Player.SetVolume(request);
         }
-
-        public async Task<Track> GetCurrentTrack()
+     
+        public async Task<CurrentPlayingState> GetCurrentPlayingState()
         {
-            PlayerCurrentlyPlayingRequest req = new();
-
             CurrentlyPlayingContext ctx = await _spotify.Player.GetCurrentPlayback();
 
-            return SpotifyAudioSourceMapper.ToTrack(((FullTrack)ctx.Item));
+            if (!ctx.CurrentlyPlayingType.Equals("track"))
+            {
+                throw new Exception("Error, playing types different to \"track\" unsupported!");
+            }
+
+            Track currentTrack = SpotifyAudioSourceMapper.ToTrack(((FullTrack)ctx.Item));
+
+            return new CurrentPlayingState(ctx.IsPlaying, !ctx.RepeatState.Equals("off"), 0, currentTrack);
         }
     }
 }
