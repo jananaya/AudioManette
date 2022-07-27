@@ -8,4 +8,9 @@
     <RunTimeIdentifier>win10-x86</RunTimeIdentifier>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../AudioManette.AudioSource/AudioManette.AudioSource.csproj" />
+    <ProjectReference Include="../SpotifyAudioSource/SpotifyAudioSource.csproj" />
+  </ItemGroup>
+  
 </Project>
