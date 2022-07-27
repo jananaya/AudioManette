@@ -140,8 +140,9 @@ namespace AudioManette.AudioSource
             }
 
             Track currentTrack = SpotifyAudioSourceMapper.ToTrack(((FullTrack)ctx.Item));
+            var volumePercent = ctx.Device.VolumePercent == null ? 0 : (float)ctx.Device.VolumePercent;
 
-            return new CurrentPlayingState(ctx.IsPlaying, !ctx.RepeatState.Equals("off"), 0, currentTrack);
+            return new CurrentPlayingState(ctx.IsPlaying, !ctx.RepeatState.Equals("off"), volumePercent , currentTrack);
         }
     }
 }
