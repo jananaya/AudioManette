@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
+using System.Timers;
 
 using AudioManette.Authorization;
 using SpotifyAPI.Web;
@@ -11,6 +9,8 @@ namespace AudioManette.AudioSource
     {
         private SpotifyClient _spotify;
         private AuthotizationConfig _authInfo;
+        private System.Timers.Timer? _accessTokenExpiresIn;
+        private string? _refrechToken;
 
         private SpotifyAudioSource(AuthotizationConfig authInfo)
         {
@@ -25,8 +25,10 @@ namespace AudioManette.AudioSource
                 throw new System.Exception("Code is null");
             }
 
-            var response = await new OAuthClient().RequestToken(
-                new AuthorizationCodeTokenRequest(
+            var response = await new OAuthClient()
+            .RequestToken(
+                new AuthorizationCodeTokenRequest
+                (
                     _authInfo.ClientId,
                     _authInfo.ClientSecret,
                     _authInfo.Code,
@@ -37,10 +39,40 @@ namespace AudioManette.AudioSource
             try
             {
                 _spotify = new SpotifyClient(response.AccessToken);
-            } catch (System.Exception e)
+
+                _refrechToken = response.RefreshToken;
+
+                int milliseconds = response.ExpiresIn * 1000;
+
+                _accessTokenExpiresIn = new(milliseconds);
+                _accessTokenExpiresIn.Elapsed += OnAccessTokenExpiredEvent;
+                _accessTokenExpiresIn.AutoReset = true;
+                _accessTokenExpiresIn.Enabled = true;
+            }
+            catch (System.Exception e)
             {
                 throw new System.Exception(e.Message);
             }
+        }
+
+        private async void OnAccessTokenExpiredEvent(object? source, ElapsedEventArgs e)
+        {
+            if (_refrechToken is null)
+            {
+                throw new System.Exception("Refresh token is null");
+            }
+
+            var response = await new OAuthClient()
+            .RequestToken(
+                new AuthorizationCodeRefreshRequest
+                (
+                    _authInfo.ClientId,
+                    _authInfo.ClientSecret,
+                    _refrechToken
+                )
+            );
+
+            _spotify = new SpotifyClient(response.AccessToken);
         }
 
         public static async Task<SpotifyAudioSource> CreateAsync(AuthotizationConfig authInfo)
@@ -129,7 +161,7 @@ namespace AudioManette.AudioSource
 
             return await _spotify.Player.SetVolume(request);
         }
-     
+
         public async Task<CurrentPlayingState> GetCurrentPlayingState()
         {
             CurrentlyPlayingContext ctx = await _spotify.Player.GetCurrentPlayback();
@@ -142,7 +174,7 @@ namespace AudioManette.AudioSource
             Track currentTrack = SpotifyAudioSourceMapper.ToTrack(((FullTrack)ctx.Item));
             var volumePercent = ctx.Device.VolumePercent == null ? 0 : (float)ctx.Device.VolumePercent;
 
-            return new CurrentPlayingState(ctx.IsPlaying, !ctx.RepeatState.Equals("off"), volumePercent , currentTrack);
+            return new CurrentPlayingState(ctx.IsPlaying, !ctx.RepeatState.Equals("off"), volumePercent, currentTrack);
         }
     }
 }
