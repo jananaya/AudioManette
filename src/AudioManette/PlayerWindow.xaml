@@ -14,7 +14,7 @@
     ShowInTaskbar="False"
     WindowStartupLocation="Manual"
     WindowStyle="None"
-    BorderThickness="0.7,0.7,0.7, 1" BorderBrush="#616261"
+    BorderThickness="0.7,0.7,0.7, 1"
     Background="#111111"
     SizeToContent="Height"
     AllowsTransparency="True" Opacity="0.98" Deactivated="Window_Deactivated" MouseDown="Window_MouseDown" Padding="5,0,5,0">
@@ -48,7 +48,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <WrapPanel Background="#353935">
+        <WrapPanel Background="#292929">
             
             <Image Source="{Binding Path=ImagePath, Mode=OneWay}">
                 <Image.HorizontalAlignment>
