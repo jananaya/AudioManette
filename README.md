@@ -10,7 +10,7 @@ AudioManette is a simple remote for Spotify, initially it is not intended to ful
 
 You must have a Spotify Developer account to access the [Spotify dashboard](https://developer.spotify.com/dashboard/) and create a new app.
 
-If you have the app, then click on "Edit settings" and add `http://localhost:5000/` as the redirect URI.
+Once you have the app, click on "Edit settings" and add `http://localhost:5000/` as the redirect URI.
 
 Set the Client ID and Client Secret from `config/App.config`.
 <p align="center">
